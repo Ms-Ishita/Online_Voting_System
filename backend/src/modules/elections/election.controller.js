@@ -1,7 +1,12 @@
+import { toUTC } from "../../utils/convertToUTC.js"
 import * as electionService from "./election.service.js"
 
 export const createElection=async (req,res) => {
     try {
+        
+        const {start_time,end_time}=req.body
+        req.body.start_time=toUTC(start_time)
+        req.body.end_time=toUTC(end_time)
         const election=await electionService.createElection(req.body)
 
         res.status(201).json({message:"Election created",electionId:election.id})

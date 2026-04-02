@@ -14,12 +14,12 @@ export const getResults = async (req, res) => {
 export const getWinner = async (req, res) => {
   try {
     const winner = await resultService.getWinner(req.params.electionId)
-
     res.json({
       candidate_id: winner.candidate_id,
       name: winner.Candidate.name,
       party: winner.Candidate.party,
-      votes: winner.dataValues.votes
+      votes: winner.dataValues.votes,
+      photo: winner.Candidate.photo_url
     })
 
   } catch (error) {
