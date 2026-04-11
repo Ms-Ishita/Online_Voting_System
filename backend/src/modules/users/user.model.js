@@ -23,12 +23,16 @@ const User=sequelize.define(
             allowNull:false
         },
         role:{
-            type:DataTypes.ENUM("admin","voter"),
+            type:DataTypes.ENUM("god","admin","voter"),
             defaultValue:"voter"
         },
-        is_verified:{
+        isVerified:{
             type: DataTypes.BOOLEAN,
             defaultValue:false
+        },
+        isSuspended:{
+            type: DataTypes.BOOLEAN,
+            defaultValue:false,
         }
     },
     {

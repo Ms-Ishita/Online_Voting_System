@@ -1,24 +1,32 @@
 import User from "../users/user.model.js"
 import { hashPassword, comparePassword } from "../../utils/hash.js"
 import { generateToken } from "../../utils/jwt.js"
+import { INTEGER } from "sequelize";
 
 
 // register user
 export const registerUser= async ({name, email, password})=>{
-    const existingUser = await User.findOne({where:{email}})
+    const existingUser = await User.findOne({where:{email}});
     if(existingUser){
-        throw Error("Email already registered")
+        throw Error("Email already registered");
     }
+
+    const userCount = await User.count();
+    const assignedRole = userCount === 0 ? "god" : "voter";
 
     const hashedPassword = await hashPassword(password)
 
     const user= await User.create({
         name,
         email,
-        password:hashedPassword
+        password: hashedPassword,   
+        role: assignedRole // default role is voter
     })
 
-    return user
+    const userJson = user.toJSON()
+    delete userJson.password;
+
+    return userJson;
 }
 
 // login user
@@ -36,5 +44,10 @@ export const loginUser = async({email,password})=>{
 
     const token = generateToken(user)
 
-    return {user,token}
+
+    // delete data before sending response to frontend
+    const userJson = user.toJSON();
+    delete userJson.password;
+
+    return {user: userJson,token}
 }

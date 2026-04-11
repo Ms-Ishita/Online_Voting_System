@@ -20,3 +20,4 @@ export const connectDB=async()=>{
         console.error("DB connection failed",error)
     }
 }
+
