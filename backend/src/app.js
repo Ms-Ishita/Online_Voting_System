@@ -1,5 +1,6 @@
 import express from "express"
 import morgan from "morgan"
+import cors from "cors"
 import authRouter from "./modules/auth/auth.routes.js"
 import candidateRouter from "./modules/candidates/candidate.routes.js"
 import electionRouter from "./modules/elections/election.routes.js"
@@ -14,6 +15,7 @@ const app=express()
 // middlewares
 app.use(express.json())
 app.use(morgan("dev"))
+app.use(cors())
 
 // Rate limiting
 const limiter = rateLimit({

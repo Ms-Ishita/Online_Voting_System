@@ -9,8 +9,11 @@ const validate = (schema) => (req, res, next) => {
     });
     next();
   } catch (error) {
-    const errorMessages = error.errors.map((err) => `${err.path.join('.')}: ${err.message}`).join(', ');
-    return next(new AppError(`Validation failed: ${errorMessages}`, 400));
+    if (error.name === 'ZodError') {
+      const errorMessages = error.issues.map((err) => `${err.path.join('.')}: ${err.message}`).join(', ');
+      return next(new AppError(`Validation failed: ${errorMessages}`, 400));
+    }
+    return next(error);
   }
 };
 
