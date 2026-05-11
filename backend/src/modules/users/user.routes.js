@@ -1,6 +1,8 @@
 import express from "express"
 import authMiddleware from "../../middleware/auth.middleware.js"
 import roleMiddleware from "../../middleware/role.middleware.js"
+import validate from "../../middleware/validate.middleware.js"
+import { userIdSchema, updateUserRoleSchema, updateProfileSchema } from "./user.schema.js"
 import {
   getProfile,
   getAllUsers,
@@ -16,12 +18,13 @@ const router = express.Router()
 /*
 Protected routes
 */
-router.get("/me", authMiddleware, getProfile);
+router.get("/me", authMiddleware, getProfile)
 
 router.patch("/me/update",
   authMiddleware,
+  validate(updateProfileSchema),
   updateProfile
-);
+)
 
 /*
   ADMIN ROUTES (Election Officers)
@@ -32,35 +35,41 @@ router.get("/",
   authMiddleware, 
   roleMiddleware(["admin", "god"]), 
   getAllUsers
-);
+)
 
-// Only Super Admins should be able to delete users/admins in a voting system
 router.delete("/:id", 
   authMiddleware, 
-  roleMiddleware(["god"]), 
+  roleMiddleware(["admin", "god"]), 
+  validate(userIdSchema),
   deleteUser
-);
+)
 
-// Only Super Admin(god) can promote a Voter to an Admin
-router.patch("/role/:id", 
-  authMiddleware, 
-  roleMiddleware(["god"]), 
+
+// update UserRole(only god has right to do so)
+router.patch("/:id/role",
+  authMiddleware,
+  roleMiddleware(["god"]),
+  validate(updateUserRoleSchema),
   updateUserRole
-);
+)
 
-//Aprove user to participate in election
+
+// verify account
 router.patch("/:id/verify",
   authMiddleware,
-  roleMiddleware(["admin","god"]),
+  roleMiddleware(["god","admin"]),
+  validate(userIdSchema),
   verifyUser
-);
+)
 
-// Suspend user from participating in election
+
+// suspend user
 router.patch("/:id/suspend",
   authMiddleware,
-  roleMiddleware(["admin","god"]),
+  roleMiddleware(["god","admin"]),
+  validate(userIdSchema),
   suspendUser
-);
+)
 
 
 export default router

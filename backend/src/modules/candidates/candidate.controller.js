@@ -1,6 +1,6 @@
 import * as candidateService from "./candidate.service.js"
 
-export const addCandidate = async (req, res) => {
+export const addCandidate = async (req, res, next) => {
   try {
     const candidate = await candidateService.addCandidate(
       req.body,
@@ -14,22 +14,25 @@ export const addCandidate = async (req, res) => {
     })
 
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    next(error)
   }
 }
 
-export const getCandidates=async(req,res)=>{
-    const candidates=await candidateService.getCandidatesByElection(req.params.electionId)
-
-    res.json(candidates)
+export const getCandidates=async(req, res, next)=>{
+    try {
+        const candidates = await candidateService.getCandidatesByElection(req.params.electionId)
+        res.json(candidates)
+    } catch (error) {
+        next(error)
+    }
 }
 
-export const deleteCandidate=async (req,res) => {
+export const deleteCandidate=async (req, res, next) => {
     try {
         await candidateService.deleteCandidate(req.params.id)
 
-        res.json({message:"Candidate deleted"})
+        res.json({message: "Candidate deleted"})
     } catch (error) {
-        res.status(404).json({error:error.message})
+        next(error)
     }
 }

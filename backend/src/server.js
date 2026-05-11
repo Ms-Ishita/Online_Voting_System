@@ -5,7 +5,7 @@ import "./models/index.js"
 
 
 await connectDB()
-await sequelize.sync()
+await sequelize.sync({ alter: true })
 app.listen(PORT,()=>{
     console.log("server started at http://localhost:"+PORT)
 })

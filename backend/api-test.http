@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:5000/api
+@baseUrl = http://localhost:56478/api
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsInJvbGUiOiJ2b3RlciIsImlhdCI6MTc3NTc0MzAzMiwiZXhwIjoxNzc1ODI5NDMyfQ.Aj3UdrQqGKGG6ttsYqi9wsIWSNAO17sz73xgSFFyRcU
 
 ### 🔐 Register
@@ -6,9 +6,9 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "name": "Harshit",
-  "email": "harshit@gmail.in",
-  "password": "123456"
+  "name": "Abc",
+  "email": "[EMAIL_ADDRESS]",
+  "password": "[PASSWORD]"
 }
 
 
@@ -17,10 +17,17 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "harshit@gmail.in",
-  "password": "123456"
+  "email": "[EMAIL_ADDRESS]",
+  "password": "[PASSWORD]"
 }
 
+### 📧 Verify Email
+POST {{baseUrl}}/auth/verify-email
+Content-Type: application/json
+
+{
+  "token": ""
+}
 
 ### 👤 Get Profile
 GET {{baseUrl}}/users/me
@@ -103,6 +110,15 @@ DELETE {{baseUrl}}/candidates/1
 Authorization: Bearer {{token}}
 
 
+### 📱 Request OTP to Vote
+POST {{baseUrl}}/votes/request-otp
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "election_id": 2
+}
+
 ### 🗳️ Cast Vote
 POST {{baseUrl}}/votes
 Authorization: Bearer {{token}}
@@ -110,7 +126,8 @@ Content-Type: application/json
 
 {
   "candidate_id": 3,
-  "election_id": 2
+  "election_id": 2,
+  "otp": "123456"
 }
 
 

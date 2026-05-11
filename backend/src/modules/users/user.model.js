@@ -33,6 +33,18 @@ const User=sequelize.define(
         isSuspended:{
             type: DataTypes.BOOLEAN,
             defaultValue:false,
+        },
+        verificationToken:{
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        otp:{
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        otpExpiresAt:{
+            type: DataTypes.DATE,
+            allowNull: true
         }
     },
     {
