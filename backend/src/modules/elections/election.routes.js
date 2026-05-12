@@ -7,10 +7,10 @@ import { createElection, endElection, getAllElections, getElectionById, startEle
 
 const router = Router()
 
-// admin
-router.post("/", authMiddleware, roleMiddleware("admin"), validate(createElectionSchema), createElection)
-router.put("/start/:id", authMiddleware, roleMiddleware("admin"), validate(electionIdSchema), startElection)
-router.put("/end/:id", authMiddleware, roleMiddleware("admin"), validate(electionIdSchema), endElection)
+// admin & god
+router.post("/", authMiddleware, roleMiddleware(["admin", "god"]), validate(createElectionSchema), createElection)
+router.put("/start/:id", authMiddleware, roleMiddleware(["admin", "god"]), validate(electionIdSchema), startElection)
+router.put("/end/:id", authMiddleware, roleMiddleware(["admin", "god"]), validate(electionIdSchema), endElection)
 
 // public
 router.get("/", getAllElections)

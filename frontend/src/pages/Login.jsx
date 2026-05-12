@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, Mail, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -14,7 +15,7 @@ const Login = () => {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:56478/api/auth/login', {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -39,9 +40,7 @@ const Login = () => {
       
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 mb-4">
-            <Lock size={24} className="text-[#3B82F6]" />
-          </div>
+
           <h1 className="text-3xl font-bold font-['Geist'] text-white tracking-tight">Welcome Back</h1>
           <p className="text-slate-400 mt-2 text-sm">Secure access to the VOTEGUARD portal.</p>
         </div>
@@ -55,8 +54,7 @@ const Login = () => {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail size={18} className="text-slate-500" />
-                </div>
-                <input 
+                </div>                <input 
                   type="email" 
                   required
                   className="w-full pl-10 pr-4 py-3 bg-[#020617]/50 border border-white/5 rounded-xl focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-all text-white placeholder-slate-600"
@@ -72,8 +70,7 @@ const Login = () => {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock size={18} className="text-slate-500" />
-                </div>
-                <input 
+                </div>                <input 
                   type="password" 
                   required
                   className="w-full pl-10 pr-4 py-3 bg-[#020617]/50 border border-white/5 rounded-xl focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-all text-white placeholder-slate-600"

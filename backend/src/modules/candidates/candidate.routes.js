@@ -13,9 +13,9 @@ import {
 
 const router = express.Router()
 
-// admin
-router.post("/", authMiddleware, roleMiddleware("admin"), upload.single("photo"), validate(addCandidateSchema), addCandidate)
-router.delete("/:id", authMiddleware, roleMiddleware("admin"), validate(candidateIdSchema), deleteCandidate)
+// admin & god
+router.post("/", authMiddleware, roleMiddleware(["admin", "god"]), upload.single("photo"), validate(addCandidateSchema), addCandidate)
+router.delete("/:id", authMiddleware, roleMiddleware(["admin", "god"]), validate(candidateIdSchema), deleteCandidate)
 
 // public
 router.get("/:electionId", validate(getCandidatesSchema), getCandidates)

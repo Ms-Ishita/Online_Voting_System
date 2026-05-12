@@ -1,5 +1,7 @@
 import Election from "./election.model.js"
 import AppError from "../../utils/AppError.js"
+import Vote from "../votes/vote.model.js"
+import User from "../users/user.model.js"
 
 // create election (admin)
 export const createElection=async({title, description, start_time, end_time})=>{
@@ -20,7 +22,19 @@ export const createElection=async({title, description, start_time, end_time})=>{
 
 // get all elections
 export const getAllElections=async()=>{
-    return Election.findAll()
+    const elections = await Election.findAll()
+    const totalVoters = await User.count({ where: { role: 'voter' } })
+
+    const electionsWithStats = await Promise.all(elections.map(async (election) => {
+        const votesCast = await Vote.count({ where: { election_id: election.id } })
+        return {
+            ...election.toJSON(),
+            votesCast,
+            totalVoters
+        }
+    }))
+
+    return electionsWithStats
 }
 
 // get single election

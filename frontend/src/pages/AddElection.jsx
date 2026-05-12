@@ -8,6 +8,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import dayjs from 'dayjs';
+import { API_URL } from '../config';
 
 const AddElection = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const AddElection = () => {
         end_time: end
       };
 
-      const res = await fetch('http://localhost:56478/api/elections', {
+      const res = await fetch(`${API_URL}/elections`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,6 +180,7 @@ const AddElection = () => {
                 <div className="absolute top-3 left-3 flex items-center pointer-events-none">
                   <FileText size={18} className="text-slate-500" />
                 </div>
+
                 <textarea 
                   required
                   rows="3"
@@ -197,6 +199,7 @@ const AddElection = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <DatePicker 
                     label="Select Date"
+                    format="DD/MM/YYYY"
                     value={formData.start_date}
                     onChange={(newValue) => setFormData({...formData, start_date: newValue})}
                     className="w-full"
@@ -221,6 +224,7 @@ const AddElection = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <DatePicker 
                     label="Select Date"
+                    format="DD/MM/YYYY"
                     value={formData.end_date}
                     onChange={(newValue) => setFormData({...formData, end_date: newValue})}
                     className="w-full"
@@ -229,8 +233,7 @@ const AddElection = () => {
                     label="Select Time"
                     viewRenderers={{
                       hours: renderTimeViewClock,
-                      minutes: renderTimeViewClock,
-                      seconds: renderTimeViewClock,
+                      minutes: renderTimeViewClock
                     }}
                     value={formData.end_time}
                     onChange={(newValue) => setFormData({...formData, end_time: newValue})}
@@ -245,7 +248,7 @@ const AddElection = () => {
               disabled={loading}
               className="group flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white px-4 py-3.5 rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] mt-8"
             >
-              {loading ? 'Processing...' : 'Create Election Protocol'}
+              {loading ? 'Processing...' : 'Create Election'}
               {!loading && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
             </button>
           </form>

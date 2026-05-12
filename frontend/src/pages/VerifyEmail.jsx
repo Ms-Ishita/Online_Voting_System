@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { API_URL } from '../config';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const navigate = useNavigate();
   const [status, setStatus] = useState('loading'); // loading, success, error
   const [message, setMessage] = useState('');
 
@@ -17,7 +19,7 @@ const VerifyEmail = () => {
 
     const verify = async () => {
       try {
-        const res = await fetch('http://localhost:56478/api/auth/verify-email', {
+        const res = await fetch(`${API_URL}/auth/verify-email`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token })
@@ -28,6 +30,11 @@ const VerifyEmail = () => {
         
         setStatus('success');
         setMessage(data.message);
+        
+        // Automatically redirect to login after 3 seconds
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
       } catch (err) {
         setStatus('error');
         setMessage(err.message);
@@ -35,7 +42,7 @@ const VerifyEmail = () => {
     };
 
     verify();
-  }, [token]);
+  }, [token, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-[#020617] text-[#F8FAFC]">
@@ -56,9 +63,10 @@ const VerifyEmail = () => {
             </div>
             <h2 className="text-2xl font-bold text-white tracking-tight">Email Verified</h2>
             <p className="text-emerald-400 mt-2 text-sm">{message}</p>
-            <Link to="/login" className="mt-8 bg-[#3B82F6] hover:bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors w-full">
-              Proceed to Login
-            </Link>
+            <p className="text-slate-400 mt-6 text-sm flex items-center gap-2">
+              <Loader2 size={14} className="animate-spin text-[#3B82F6]" />
+              Redirecting to login...
+            </p>
           </div>
         )}
 

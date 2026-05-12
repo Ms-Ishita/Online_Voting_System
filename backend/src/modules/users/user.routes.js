@@ -2,10 +2,11 @@ import express from "express"
 import authMiddleware from "../../middleware/auth.middleware.js"
 import roleMiddleware from "../../middleware/role.middleware.js"
 import validate from "../../middleware/validate.middleware.js"
-import { userIdSchema, updateUserRoleSchema, updateProfileSchema } from "./user.schema.js"
+import { userIdSchema, updateUserRoleSchema, updateProfileSchema, addUserSchema } from "./user.schema.js"
 import {
   getProfile,
   getAllUsers,
+  addUser,
   deleteUser,
   updateUserRole,
   updateProfile,
@@ -29,12 +30,18 @@ router.patch("/me/update",
 /*
   ADMIN ROUTES (Election Officers)
   - Accessible by Admin AND God
-  - Note: Modify your roleMiddleware to accept an array or handle hierarchy
 */
 router.get("/", 
   authMiddleware, 
   roleMiddleware(["admin", "god"]), 
   getAllUsers
+)
+
+router.post("/",
+  authMiddleware,
+  roleMiddleware(["admin", "god"]),
+  validate(addUserSchema),
+  addUser
 )
 
 router.delete("/:id", 

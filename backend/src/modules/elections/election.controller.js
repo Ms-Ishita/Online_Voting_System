@@ -1,7 +1,7 @@
 import { toUTC } from "../../utils/convertToUTC.js"
 import * as electionService from "./election.service.js"
 
-export const createElection=async (req, res, next) => {
+export const  createElection=async (req, res, next) => {
     try {
         const {start_time, end_time} = req.body
         req.body.start_time = toUTC(start_time)

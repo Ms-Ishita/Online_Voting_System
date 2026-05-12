@@ -1,11 +1,14 @@
 import React from 'react';
-import { Lock, ShieldCheck, Link as LinkIcon, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import VerifyEmail from './pages/VerifyEmail';
 import Dashboard from './pages/Dashboard';
 import AddElection from './pages/AddElection';
+import ManageCandidates from './pages/ManageCandidates';
+import CastVote from './pages/CastVote';
+import ManageUsers from './pages/ManageUsers';
 
 const LandingPage = () => {
   return (
@@ -17,18 +20,11 @@ const LandingPage = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 border-b border-white/5 bg-[#0F172A]/50 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-[#3B82F6] flex items-center justify-center">
-              <Lock size={16} className="text-white" />
-            </div>
             <span className="font-bold tracking-widest text-xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
               VOTEGUARD
             </span>
           </div>
           
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-            <ShieldCheck size={14} className="text-emerald-500" />
-            <span className="text-xs font-medium text-emerald-500 uppercase tracking-wider">Encrypted Session</span>
-          </div>
 
           <div className="flex items-center gap-4">
             <Link to="/login" className="text-sm font-medium hover:text-white text-slate-300 transition-colors">
@@ -68,29 +64,6 @@ const LandingPage = () => {
             </Link>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto pt-16">
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#0F172A]/50 border border-white/5 backdrop-blur-md">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                <ShieldCheck size={24} className="text-emerald-500" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-semibold text-white">End-to-End Encryption</h3>
-                <p className="text-sm text-slate-400">Your ballot is encrypted before it leaves your device.</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#0F172A]/50 border border-white/5 backdrop-blur-md">
-              <div className="w-12 h-12 rounded-full bg-[#3B82F6]/10 flex items-center justify-center shrink-0">
-                <LinkIcon size={24} className="text-[#3B82F6]" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-semibold text-white">Transparent Verification</h3>
-                <p className="text-sm text-slate-400">Publicly verifiable without compromising voter privacy.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
       </main>
     </div>
@@ -107,6 +80,9 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin/add-election" element={<AddElection />} />
+        <Route path="/admin/manage-candidates/:electionId" element={<ManageCandidates />} />
+        <Route path="/admin/manage-users" element={<ManageUsers />} />
+        <Route path="/vote/:electionId" element={<CastVote />} />
       </Routes>
     </BrowserRouter>
   );

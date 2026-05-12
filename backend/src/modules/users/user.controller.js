@@ -27,6 +27,27 @@ export const getAllUsers = async (req, res, next) => {
 }
 
 /*
+POST /api/users
+(God only usually, or admin if allowed)
+*/
+export const addUser = async (req, res, next) => {
+  try {
+    // Only god can create admins or gods. Admin can only create voters.
+    if (req.user.role === "admin" && req.body.role && req.body.role !== "voter") {
+      return next(new AppError("Admins can only add voter accounts", 403))
+    }
+
+    const user = await userService.addUser(req.body)
+    res.status(201).json({
+      message: "User added successfully",
+      user
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/*
 DELETE /api/users/:id
 (Admin only)
 */

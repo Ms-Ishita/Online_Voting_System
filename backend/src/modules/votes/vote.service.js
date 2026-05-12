@@ -10,9 +10,7 @@ export const generateAndSendOTP = async (userId, electionId) => {
     const election = await Election.findByPk(electionId)
     if (!election) throw new AppError("Election not found", 404)
     
-    const now = new Date()
-    const isWithinTime = now >= election.start_time && now <= election.end_time
-    if (election.status !== "active" || !isWithinTime) {
+    if (election.status !== "active") {
         throw new AppError("Voting is not allowed for this election right now", 400)
     }
 
@@ -46,9 +44,7 @@ export const castVote=async({userId, candidateId, electionId, otp})=>{
     if(!election){
         throw new AppError("Election not found", 404)
     }
-    const now = new Date()
-    const isWithinTime = now >= election.start_time && now <= election.end_time
-    if (election.status !== "active" || !isWithinTime){
+    if (election.status !== "active"){
         throw new AppError("Voting is not allowed", 400)
     }
 

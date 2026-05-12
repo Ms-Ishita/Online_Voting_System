@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Lock, Mail, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, User, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../config';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -15,7 +16,7 @@ const Register = () => {
     setSuccess('');
 
     try {
-      const res = await fetch('http://localhost:56478/api/auth/register', {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -39,9 +40,7 @@ const Register = () => {
       
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mb-4">
-            <ShieldCheck size={24} className="text-emerald-500" />
-          </div>
+
           <h1 className="text-3xl font-bold font-['Geist'] text-white tracking-tight">Create Account</h1>
           <p className="text-slate-400 mt-2 text-sm">Join the secure VOTEGUARD network.</p>
         </div>
@@ -56,8 +55,7 @@ const Register = () => {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User size={18} className="text-slate-500" />
-                </div>
-                <input 
+                </div>                <input 
                   type="text" 
                   required
                   className="w-full pl-10 pr-4 py-3 bg-[#020617]/50 border border-white/5 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-white placeholder-slate-600"
@@ -73,8 +71,7 @@ const Register = () => {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail size={18} className="text-slate-500" />
-                </div>
-                <input 
+                </div>                <input 
                   type="email" 
                   required
                   className="w-full pl-10 pr-4 py-3 bg-[#020617]/50 border border-white/5 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-white placeholder-slate-600"
@@ -90,8 +87,7 @@ const Register = () => {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock size={18} className="text-slate-500" />
-                </div>
-                <input 
+                </div>                <input 
                   type="password" 
                   required
                   className="w-full pl-10 pr-4 py-3 bg-[#020617]/50 border border-white/5 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-white placeholder-slate-600"
