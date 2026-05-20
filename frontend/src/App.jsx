@@ -1,6 +1,18 @@
-import React from 'react';
-import { ArrowRight } from 'lucide-react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  ArrowRight,
+  ShieldCheck,
+  Vote,
+  BarChart3
+} from 'lucide-react';
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom';
+
 import Login from './pages/Login';
 import Register from './pages/Register';
 import VerifyEmail from './pages/VerifyEmail';
@@ -10,62 +22,507 @@ import ManageCandidates from './pages/ManageCandidates';
 import CastVote from './pages/CastVote';
 import ManageUsers from './pages/ManageUsers';
 
-const LandingPage = () => {
-  return (
-    <div className="min-h-screen bg-[#020617] text-[#F8FAFC] font-sans selection:bg-[#3B82F6] selection:text-white relative overflow-hidden">
-      {/* Background ambient light */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#3B82F6] opacity-[0.05] blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
-      
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 border-b border-white/5 bg-[#0F172A]/50 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-bold tracking-widest text-xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-              VOTEGUARD
-            </span>
-          </div>
-          
+import { Button } from '@headlessui/react';
 
-          <div className="flex items-center gap-4">
-            <Link to="/login" className="text-sm font-medium hover:text-white text-slate-300 transition-colors">
-              Login
-            </Link>
-            <Link to="/register" className="text-sm font-medium bg-[#3B82F6] hover:bg-blue-600 text-white px-5 py-2 rounded-lg transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)]">
-              Register
-            </Link>
+const LandingPage = () => {
+  const videoRef = useRef(null);
+
+  const [navVisible, setNavVisible] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setNavVisible(true), 250);
+
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    let reverseInterval = null;
+    let reversing = false;
+
+    const startReverse = () => {
+      reversing = true;
+
+      reverseInterval = setInterval(() => {
+        video.currentTime = Math.max(
+          0,
+          video.currentTime - 0.04
+        );
+
+        if (video.currentTime <= 0.05) {
+          clearInterval(reverseInterval);
+
+          reversing = false;
+
+          video.currentTime = 0;
+
+          video.play().catch(() => {});
+        }
+      }, 40);
+    };
+
+    const onTimeUpdate = () => {
+      if (!video.duration) return;
+
+      if (
+        !reversing &&
+        video.currentTime >= video.duration - 0.05
+      ) {
+        video.pause();
+
+        startReverse();
+      }
+    };
+
+    video.play().catch(() => {});
+
+    video.addEventListener(
+      'timeupdate',
+      onTimeUpdate
+    );
+
+    return () => {
+      video.removeEventListener(
+        'timeupdate',
+        onTimeUpdate
+      );
+
+      if (reverseInterval) {
+        clearInterval(reverseInterval);
+      }
+    };
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-[#0B0B0B] text-white overflow-hidden relative">
+
+      {/* VIDEO BACKGROUND */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          className="w-full h-full object-cover opacity-[0.14]"
+        >
+          <source
+            src="/vote.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        <div className="absolute inset-0 bg-black/70"></div>
+
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
+      </div>
+
+      {/* GRID */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:80px_80px]"></div>
+
+      {/* AMBIENT LIGHT */}
+      <div className="absolute top-[-10%] right-[-10%] w-[700px] h-[700px] bg-white opacity-[0.03] blur-[120px] rounded-full"></div>
+
+      {/* NAVBAR */}
+      <nav
+        className={
+          `fixed top-0 left-0 right-0 z-50 transition-all duration-700 ` +
+          (navVisible
+            ? 'translate-y-0 opacity-100'
+            : '-translate-y-4 opacity-0')
+        }
+      >
+        <div className="max-w-7xl mx-auto px-6 pt-5">
+
+          <div className="border border-white/10 bg-black/40 backdrop-blur-2xl rounded-2xl px-6 py-4 flex items-center justify-between">
+
+            {/* LOGO */}
+            <div className="flex items-center gap-3">
+
+              <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center">
+                <Vote
+                  size={18}
+                  className="text-black"
+                />
+              </div>
+
+              <h1 className="text-xl font-semibold tracking-wide">
+                VoteGuard
+              </h1>
+            </div>
+
+            {/* LINKS */}
+            <div className="hidden md:flex items-center gap-10 text-sm text-zinc-400">
+
+              <a
+                href="#features"
+                className="hover:text-white transition-colors"
+              >
+                Features
+              </a>
+
+              <a
+                href="#security"
+                className="hover:text-white transition-colors"
+              >
+                Security
+              </a>
+
+              <a
+                href="#analytics"
+                className="hover:text-white transition-colors"
+              >
+                Analytics
+              </a>
+            </div>
+
+            {/* BUTTONS */}
+            <div className="flex items-center gap-4">
+
+              <Button
+                as={Link}
+                to="/login"
+                className="text-sm font-medium text-zinc-300 hover:text-white transition-colors cursor-pointer"
+              >
+                Login
+              </Button>
+
+              <Button
+                as={Link}
+                to="/register"
+                className="text-sm font-medium bg-white text-black px-5 py-2.5 rounded-xl hover:bg-zinc-200 transition-all cursor-pointer"
+              >
+                Register
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-20">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-4">
-            <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-            <span className="text-sm text-slate-300">Live Institutional Voting Network</span>
+      {/* HERO */}
+      <main className="relative z-10 min-h-screen flex items-center justify-center px-6 pt-32">
+
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+
+          {/* LEFT */}
+          <div>
+
+            {/* BADGE */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-xl mb-8">
+
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+
+              <span className="text-sm text-zinc-300 tracking-wide">
+                Secure Digital Democracy
+              </span>
+            </div>
+
+            {/* TITLE */}
+            <h1 className="text-6xl md:text-8xl font-black leading-[0.92] tracking-tight">
+
+              Voting.
+
+              <br />
+
+              <span className="text-zinc-500">
+                Reimagined.
+              </span>
+            </h1>
+
+            {/* DESCRIPTION */}
+            <p className="mt-8 text-lg md:text-xl text-zinc-400 leading-relaxed max-w-2xl">
+              A modern online voting platform built for secure,
+              transparent, and seamless digital elections.
+            </p>
+
+            {/* BUTTONS */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-10">
+
+              <Button
+                as={Link}
+                to="/register"
+                className="group flex items-center justify-center gap-2 bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:bg-zinc-200 transition-all"
+              >
+                Get Started
+
+                <ArrowRight
+                  size={18}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </Button>
+
+              <Button
+                as={Link}
+                to="/login"
+                className="border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-white px-8 py-4 rounded-2xl font-medium transition-all"
+              >
+                Admin Portal
+              </Button>
+            </div>
+
+            {/* ANALYTICS */}
+            <div
+              id="analytics"
+              className="grid grid-cols-3 gap-10 mt-16"
+            >
+
+              <div>
+                <h2 className="text-3xl font-bold">
+                  10K+
+                </h2>
+
+                <p className="text-zinc-500 mt-2 text-sm">
+                  Votes Processed
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-3xl font-bold">
+                  99.9%
+                </h2>
+
+                <p className="text-zinc-500 mt-2 text-sm">
+                  System Reliability
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-3xl font-bold">
+                  Real-Time
+                </h2>
+
+                <p className="text-zinc-500 mt-2 text-sm">
+                  Vote Analytics
+                </p>
+              </div>
+            </div>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400">
-            Secure Democracy <br className="hidden md:block" /> in Your Hands.
-          </h1>
-          
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Experience the next generation of institutional voting. Encrypted, transparent, and accessible from anywhere. Every vote is cryptographically secured.
-          </p>
+          {/* RIGHT CARD */}
+          <div className="relative">
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
-            <Link to="/register" className="group flex items-center justify-center gap-2 w-full sm:w-auto bg-[#3B82F6] hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-medium transition-all shadow-[0_0_30px_rgba(59,130,246,0.25)]">
-              Get Started Now
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link to="/login" className="flex items-center justify-center w-full sm:w-auto bg-[#0F172A]/70 hover:bg-[#0F172A] border border-white/10 backdrop-blur-xl text-white px-8 py-4 rounded-xl font-medium transition-all hover:border-white/20">
-              Admin Portal
-            </Link>
+            {/* MAIN CARD */}
+            <div className="relative p-8 rounded-[32px] border border-white/10 bg-white/[0.04] backdrop-blur-2xl shadow-2xl">
+
+              <div className="flex items-center justify-between mb-8">
+
+                <div>
+                  <p className="text-zinc-500 text-sm">
+                    Active Election
+                  </p>
+
+                  <h3 className="text-3xl font-bold mt-2">
+                    Student Council 2026
+                  </h3>
+                </div>
+
+                <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center">
+
+                  <Vote className="text-white" />
+                </div>
+              </div>
+
+              {/* PROGRESS */}
+              <div>
+
+                <div className="flex items-center justify-between text-sm text-zinc-400 mb-3">
+
+                  <span>Voting Progress</span>
+
+                  <span>72%</span>
+                </div>
+
+                <div className="h-3 rounded-full bg-zinc-800 overflow-hidden">
+
+                  <div className="h-full w-[72%] bg-white rounded-full"></div>
+                </div>
+              </div>
+
+              {/* STATS */}
+              <div className="grid grid-cols-2 gap-5 mt-10">
+
+                <div className="p-5 rounded-2xl border border-white/10 bg-black/30">
+
+                  <p className="text-zinc-500 text-sm">
+                    Total Voters
+                  </p>
+
+                  <h2 className="text-3xl font-bold mt-2">
+                    8,421
+                  </h2>
+                </div>
+
+                <div className="p-5 rounded-2xl border border-white/10 bg-black/30">
+
+                  <p className="text-zinc-500 text-sm">
+                    Votes Casted
+                  </p>
+
+                  <h2 className="text-3xl font-bold mt-2">
+                    6,075
+                  </h2>
+                </div>
+              </div>
+            </div>
+
+            {/* FLOATING CARD */}
+            <div className="absolute -bottom-8 -left-8 hidden md:block">
+
+              <div className="p-5 rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-2xl shadow-xl">
+
+                <div className="flex items-center gap-4">
+
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.05] flex items-center justify-center border border-white/10">
+
+                    <ShieldCheck className="text-white" />
+                  </div>
+
+                  <div>
+
+                    <h4 className="font-semibold">
+                      End-to-End Security
+                    </h4>
+
+                    <p className="text-sm text-zinc-500 mt-1">
+                      Protected & encrypted voting
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
         </div>
       </main>
+
+      {/* FEATURES */}
+      <section
+        id="features"
+        className="relative z-10 px-6 pb-28"
+      >
+        <div className="max-w-7xl mx-auto">
+
+          <div className="text-center mb-20">
+
+            <p className="text-zinc-500 tracking-[0.2em] uppercase text-sm">
+              FEATURES
+            </p>
+
+            <h2 className="text-5xl font-bold mt-5">
+              Built for Modern Elections
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+
+            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
+
+              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-6">
+
+                <ShieldCheck className="text-white" />
+              </div>
+
+              <h3 className="text-2xl font-semibold mb-4">
+                Secure Authentication
+              </h3>
+
+              <p className="text-zinc-500 leading-relaxed">
+                Advanced authentication ensures only verified users can participate in elections.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
+
+              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-6">
+
+                <BarChart3 className="text-white" />
+              </div>
+
+              <h3 className="text-2xl font-semibold mb-4">
+                Real-Time Analytics
+              </h3>
+
+              <p className="text-zinc-500 leading-relaxed">
+                Monitor election progress and voting activity with real-time updates.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
+
+              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-6">
+
+                <Vote className="text-white" />
+              </div>
+
+              <h3 className="text-2xl font-semibold mb-4">
+                Transparent Voting
+              </h3>
+
+              <p className="text-zinc-500 leading-relaxed">
+                Every vote is securely recorded and transparently processed.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECURITY */}
+      <section
+        id="security"
+        className="relative z-10 px-6 pb-28"
+      >
+        <div className="max-w-7xl mx-auto">
+
+          <div className="text-center mb-20">
+
+            <p className="text-zinc-500 tracking-[0.2em] uppercase text-sm">
+              SECURITY
+            </p>
+
+            <h2 className="text-5xl font-bold mt-5">
+              Built with Trust & Transparency
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+
+            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
+
+              <h3 className="text-2xl font-semibold mb-4">
+                Encrypted Voting
+              </h3>
+
+              <p className="text-zinc-500 leading-relaxed">
+                Every vote is securely encrypted to maintain voter privacy and election integrity.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
+
+              <h3 className="text-2xl font-semibold mb-4">
+                Secure Authentication
+              </h3>
+
+              <p className="text-zinc-500 leading-relaxed">
+                Verified authentication prevents unauthorized access and voting fraud.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
+
+              <h3 className="text-2xl font-semibold mb-4">
+                Transparent Results
+              </h3>
+
+              <p className="text-zinc-500 leading-relaxed">
+                Real-time vote counting ensures transparency throughout the election process.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
@@ -73,17 +530,56 @@ const LandingPage = () => {
 function App() {
   return (
     <BrowserRouter>
+
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin/add-election" element={<AddElection />} />
-        <Route path="/admin/manage-candidates/:electionId" element={<ManageCandidates />} />
-        <Route path="/admin/manage-users" element={<ManageUsers />} />
-        <Route path="/vote/:electionId" element={<CastVote />} />
+
+        <Route
+          path="/"
+          element={<LandingPage />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
+        <Route
+          path="/verify-email"
+          element={<VerifyEmail />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/admin/add-election"
+          element={<AddElection />}
+        />
+
+        <Route
+          path="/admin/manage-candidates/:electionId"
+          element={<ManageCandidates />}
+        />
+
+        <Route
+          path="/admin/manage-users"
+          element={<ManageUsers />}
+        />
+
+        <Route
+          path="/vote/:electionId"
+          element={<CastVote />}
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 }
