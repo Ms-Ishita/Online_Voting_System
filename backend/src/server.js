@@ -1,3 +1,4 @@
+
 import { PORT } from "./utils/constants.js"
 import { sequelize,connectDB } from "./config/database.js"
 import app from "./app.js"
