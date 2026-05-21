@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState
+} from 'react';
+
 import {
   ArrowRight,
   ShieldCheck,
@@ -21,38 +26,51 @@ import AddElection from './pages/AddElection';
 import ManageCandidates from './pages/ManageCandidates';
 import CastVote from './pages/CastVote';
 import ManageUsers from './pages/ManageUsers';
+import Results from './pages/Results';
 
 import { Button } from '@headlessui/react';
 
 const LandingPage = () => {
+
   const videoRef = useRef(null);
 
-  const [navVisible, setNavVisible] = useState(false);
+  const [navVisible, setNavVisible] =
+    useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setNavVisible(true), 250);
+
+    const t = setTimeout(
+      () => setNavVisible(true),
+      250
+    );
 
     return () => clearTimeout(t);
+
   }, []);
 
   useEffect(() => {
+
     const video = videoRef.current;
 
     if (!video) return;
 
     let reverseInterval = null;
+
     let reversing = false;
 
     const startReverse = () => {
+
       reversing = true;
 
       reverseInterval = setInterval(() => {
+
         video.currentTime = Math.max(
           0,
           video.currentTime - 0.04
         );
 
         if (video.currentTime <= 0.05) {
+
           clearInterval(reverseInterval);
 
           reversing = false;
@@ -61,16 +79,20 @@ const LandingPage = () => {
 
           video.play().catch(() => {});
         }
+
       }, 40);
     };
 
     const onTimeUpdate = () => {
+
       if (!video.duration) return;
 
       if (
         !reversing &&
-        video.currentTime >= video.duration - 0.05
+        video.currentTime >=
+          video.duration - 0.05
       ) {
+
         video.pause();
 
         startReverse();
@@ -85,6 +107,7 @@ const LandingPage = () => {
     );
 
     return () => {
+
       video.removeEventListener(
         'timeupdate',
         onTimeUpdate
@@ -94,6 +117,7 @@ const LandingPage = () => {
         clearInterval(reverseInterval);
       }
     };
+
   }, []);
 
   return (
@@ -109,10 +133,12 @@ const LandingPage = () => {
           playsInline
           className="w-full h-full object-cover opacity-[0.14]"
         >
+
           <source
             src="/vote.mp4"
             type="video/mp4"
           />
+
         </video>
 
         <div className="absolute inset-0 bg-black/70"></div>
@@ -135,6 +161,7 @@ const LandingPage = () => {
             : '-translate-y-4 opacity-0')
         }
       >
+
         <div className="max-w-7xl mx-auto px-6 pt-5">
 
           <div className="border border-white/10 bg-black/40 backdrop-blur-2xl rounded-2xl px-6 py-4 flex items-center justify-between">
@@ -143,6 +170,7 @@ const LandingPage = () => {
             <div className="flex items-center gap-3">
 
               <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center">
+
                 <Vote
                   size={18}
                   className="text-black"
@@ -210,7 +238,6 @@ const LandingPage = () => {
           {/* LEFT */}
           <div>
 
-            {/* BADGE */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-xl mb-8">
 
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
@@ -220,7 +247,6 @@ const LandingPage = () => {
               </span>
             </div>
 
-            {/* TITLE */}
             <h1 className="text-6xl md:text-8xl font-black leading-[0.92] tracking-tight">
 
               Voting.
@@ -232,13 +258,11 @@ const LandingPage = () => {
               </span>
             </h1>
 
-            {/* DESCRIPTION */}
             <p className="mt-8 text-lg md:text-xl text-zinc-400 leading-relaxed max-w-2xl">
               A modern online voting platform built for secure,
               transparent, and seamless digital elections.
             </p>
 
-            {/* BUTTONS */}
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
 
               <Button
@@ -246,6 +270,7 @@ const LandingPage = () => {
                 to="/register"
                 className="group flex items-center justify-center gap-2 bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:bg-zinc-200 transition-all"
               >
+
                 Get Started
 
                 <ArrowRight
@@ -262,54 +287,17 @@ const LandingPage = () => {
                 Admin Portal
               </Button>
             </div>
-
-            {/* ANALYTICS */}
-            <div
-              id="analytics"
-              className="grid grid-cols-3 gap-10 mt-16"
-            >
-
-              <div>
-                <h2 className="text-3xl font-bold">
-                  10K+
-                </h2>
-
-                <p className="text-zinc-500 mt-2 text-sm">
-                  Votes Processed
-                </p>
-              </div>
-
-              <div>
-                <h2 className="text-3xl font-bold">
-                  99.9%
-                </h2>
-
-                <p className="text-zinc-500 mt-2 text-sm">
-                  System Reliability
-                </p>
-              </div>
-
-              <div>
-                <h2 className="text-3xl font-bold">
-                  Real-Time
-                </h2>
-
-                <p className="text-zinc-500 mt-2 text-sm">
-                  Vote Analytics
-                </p>
-              </div>
-            </div>
           </div>
 
           {/* RIGHT CARD */}
           <div className="relative">
 
-            {/* MAIN CARD */}
             <div className="relative p-8 rounded-[32px] border border-white/10 bg-white/[0.04] backdrop-blur-2xl shadow-2xl">
 
               <div className="flex items-center justify-between mb-8">
 
                 <div>
+
                   <p className="text-zinc-500 text-sm">
                     Active Election
                   </p>
@@ -325,7 +313,6 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              {/* PROGRESS */}
               <div>
 
                 <div className="flex items-center justify-between text-sm text-zinc-400 mb-3">
@@ -341,7 +328,6 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              {/* STATS */}
               <div className="grid grid-cols-2 gap-5 mt-10">
 
                 <div className="p-5 rounded-2xl border border-white/10 bg-black/30">
@@ -396,138 +382,12 @@ const LandingPage = () => {
           </div>
         </div>
       </main>
-
-      {/* FEATURES */}
-      <section
-        id="features"
-        className="relative z-10 px-6 pb-28"
-      >
-        <div className="max-w-7xl mx-auto">
-
-          <div className="text-center mb-20">
-
-            <p className="text-zinc-500 tracking-[0.2em] uppercase text-sm">
-              FEATURES
-            </p>
-
-            <h2 className="text-5xl font-bold mt-5">
-              Built for Modern Elections
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-
-            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
-
-              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-6">
-
-                <ShieldCheck className="text-white" />
-              </div>
-
-              <h3 className="text-2xl font-semibold mb-4">
-                Secure Authentication
-              </h3>
-
-              <p className="text-zinc-500 leading-relaxed">
-                Advanced authentication ensures only verified users can participate in elections.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
-
-              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-6">
-
-                <BarChart3 className="text-white" />
-              </div>
-
-              <h3 className="text-2xl font-semibold mb-4">
-                Real-Time Analytics
-              </h3>
-
-              <p className="text-zinc-500 leading-relaxed">
-                Monitor election progress and voting activity with real-time updates.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
-
-              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-6">
-
-                <Vote className="text-white" />
-              </div>
-
-              <h3 className="text-2xl font-semibold mb-4">
-                Transparent Voting
-              </h3>
-
-              <p className="text-zinc-500 leading-relaxed">
-                Every vote is securely recorded and transparently processed.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECURITY */}
-      <section
-        id="security"
-        className="relative z-10 px-6 pb-28"
-      >
-        <div className="max-w-7xl mx-auto">
-
-          <div className="text-center mb-20">
-
-            <p className="text-zinc-500 tracking-[0.2em] uppercase text-sm">
-              SECURITY
-            </p>
-
-            <h2 className="text-5xl font-bold mt-5">
-              Built with Trust & Transparency
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-
-            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
-
-              <h3 className="text-2xl font-semibold mb-4">
-                Encrypted Voting
-              </h3>
-
-              <p className="text-zinc-500 leading-relaxed">
-                Every vote is securely encrypted to maintain voter privacy and election integrity.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
-
-              <h3 className="text-2xl font-semibold mb-4">
-                Secure Authentication
-              </h3>
-
-              <p className="text-zinc-500 leading-relaxed">
-                Verified authentication prevents unauthorized access and voting fraud.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-[32px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-all">
-
-              <h3 className="text-2xl font-semibold mb-4">
-                Transparent Results
-              </h3>
-
-              <p className="text-zinc-500 leading-relaxed">
-                Real-time vote counting ensures transparency throughout the election process.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
 
 function App() {
+
   return (
     <BrowserRouter>
 
@@ -576,6 +436,11 @@ function App() {
         <Route
           path="/vote/:electionId"
           element={<CastVote />}
+        />
+
+        <Route
+          path="/results/:electionId"
+          element={<Results />}
         />
 
       </Routes>
